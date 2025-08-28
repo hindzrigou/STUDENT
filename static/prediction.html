@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Productivité</title>
+  <style>
+    /* 🎨 Palette inspirée de ta page d’accueil */
+    :root {
+      --primary-color: #0d47a1;   /* bleu profond */
+      --secondary-color: #b3e5fc; /* bleu clair */
+      --accent-color: #c0d020;    /* vert SmartDay */
+      --text-color: #ffffff;      /* blanc */
+      --bg-gradient: linear-gradient(135deg, #a7d8f9, #0d47a1);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: rgba(13, 71, 161, 0.8); /* bleu profond transparent */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: var(--secondary-color);
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      width: 90%;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      background: #ffffff;
+      color: #000;
+    }
+
+    button {
+      background: var(--secondary-color);
+      color: var(--primary-color);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: var(--accent-color);
+      color: var(--text-color);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .emoji {
+      font-size: 40px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz de Productivité</h1>
+    <p>Réponds à chaque question — une à la fois.</p>
+
+    <div id="quiz">
+      <!-- Question 1 -->
+      <div class="question-step">
+        <p class="question">Combien d'heures as-tu dormi ?</p>
+        <input type="number" id="sleep" min="0" max="24">
+        <button onclick="nextQuestion()">Suivant</button>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="question-step hidden">
+        <p class="question">Combien de cours as-tu aujourd'hui ?</p>
+        <input type="number" id="courses" min="0">
+        <button onclick="nextQuestion()">Suivant</button>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="question-step hidden">
+        <p class="question">Combien d'heures d'étude perso ?</p>
+        <input type="number" id="study" min="0" max="24">
+        <button onclick="nextQuestion()">Suivant</button>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="question-step hidden">
+        <p class="question">Combien de pauses prends-tu ?</p>
+        <input type="number" id="breaks" min="0">
+        <button onclick="nextQuestion()">Suivant</button>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="question-step hidden">
+        <p class="question">Comment est ton humeur ?</p>
+        <select id="mood">
+          <option value="good">😊 Bonne</option>
+          <option value="neutral">😐 Moyenne</option>
+          <option value="bad">😞 Mauvaise</option>
+        </select>
+        <button onclick="showResult()">Voir le résultat</button>
+      </div>
+    </div>
+
+    <div id="result" class="hidden">
+      <p class="result" id="message"></p>
+      <p class="emoji" id="emoji"></p>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll(".question-step");
+
+    function nextQuestion() {
+      steps[currentStep].classList.add("hidden");
+      currentStep++;
+      steps[currentStep].classList.remove("hidden");
+    }
+
+    function showResult() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+
+      let sleep = parseInt(document.getElementById("sleep").value) || 0;
+      let courses = parseInt(document.getElementById("courses").value) || 0;
+      let study = parseInt(document.getElementById("study").value) || 0;
+      let breaks = parseInt(document.getElementById("breaks").value) || 0;
+      let mood = document.getElementById("mood").value;
+
+      let score = 0;
+
+      // Logique simple de score
+      if (sleep >= 7 && sleep <= 9) score += 25;
+      if (courses <= 5) score += 20;
+      if (study >= 2) score += 20;
+      if (breaks >= 1 && breaks <= 5) score += 15;
+      if (mood === "good") score += 20;
+      else if (mood === "neutral") score += 10;
+
+      let message = "";
+      let emoji = "";
+
+      if (score >= 70) {
+        message = "Tu es productive aujourd'hui 🎉";
+        emoji = "✨";
+      } else if (score >= 40) {
+        message = "Ta productivité est moyenne ⚖️";
+        emoji = "🙂";
+      } else {
+        message = "Pas très productif aujourd'hui...";
+        emoji = "😴";
+      }
+
+      document.getElementById("message").textContent = message;
+      document.getElementById("emoji").textContent = emoji;
+    }
+  </script>
+</body>
+</html>
