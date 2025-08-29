@@ -3,36 +3,48 @@ import React, { useState } from "react";
 function PredictionForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
-    sleep: "",
-    courses: "",
-    study: "",
-    breaks: "",
-    mood: "good",
+    Sommeil: "",
+    Cours: "",
+    Humeur: "",
+    Sport: "Non", // Keep value as "Oui"/"Non" for backend compatibility
+    Meteo: "Soleil", // Keep value as "Soleil"/"Nuageux"/"Pluie" for backend compatibility
   });
   const [showResultFlag, setShowResultFlag] = useState(false);
-  const [scoreResult, setScoreResult] = useState({ message: "", emoji: "" });
+  const [prediction, setPrediction] = useState("");
 
   const steps = [
-    { id: "sleep", question: "Combien d'heures as-tu dormi ?", type: "number" },
     {
-      id: "courses",
-      question: "Combien de cours as-tu aujourd'hui ?",
+      id: "Sommeil",
+      question: "How many hours did you sleep?",
       type: "number",
     },
     {
-      id: "study",
-      question: "Combien d'heures d'étude perso ?",
+      id: "Cours",
+      question: "How many classes do you have today?",
       type: "number",
     },
-    { id: "breaks", question: "Combien de pauses prends-tu ?", type: "number" },
     {
-      id: "mood",
-      question: "Comment est ton humeur ?",
+      id: "Humeur",
+      question: "How do you rate your mood? (1-5)",
+      type: "number",
+    },
+    {
+      id: "Sport",
+      question: "Did you do any sport?",
       type: "select",
       options: [
-        { value: "good", label: "😊 Bonne" },
-        { value: "neutral", label: "😐 Moyenne" },
-        { value: "bad", label: "😞 Mauvaise" },
+        { value: "Oui", label: "Yes" },
+        { value: "Non", label: "No" },
+      ],
+    },
+    {
+      id: "Meteo",
+      question: "What is the weather like today?",
+      type: "select",
+      options: [
+        { value: "Soleil", label: "Sunny" },
+        { value: "Nuageux", label: "Cloudy" },
+        { value: "Pluie", label: "Rainy" },
       ],
     },
   ];
@@ -44,48 +56,19 @@ function PredictionForm() {
 
   const nextQuestion = () => setCurrentStep((prev) => prev + 1);
 
-  // ✅ Nouveau showResult : appel au backend
   const showResult = async () => {
     try {
-      // Préparer les données à envoyer au backend
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch("http://localhost:5000/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Par exemple, on utilise 'study' comme heures de révision
-        body: JSON.stringify({
-          heures_revision: parseFloat(formData.study) || 0,
-        }),
+        body: JSON.stringify(formData), // envoie les champs corrects
       });
-
       const data = await response.json();
-
-      if (data.prediction) {
-        // Transformer la prédiction en message et emoji
-        let message = "";
-        let emoji = "";
-        const score = data.prediction[0];
-        if (score >= 70) {
-          message = "Tu es productive aujourd'hui 🎉";
-          emoji = "✨";
-        } else if (score >= 40) {
-          message = "Ta productivité est moyenne ⚖️";
-          emoji = "🙂";
-        } else {
-          message = "Pas très productif aujourd'hui...";
-          emoji = "😴";
-        }
-
-        setScoreResult({ message, emoji });
-      } else {
-        setScoreResult({ message: "Erreur dans la prédiction", emoji: "⚠️" });
-      }
-
+      setPrediction(data.prediction[0]); // get prediction
       setShowResultFlag(true);
     } catch (error) {
-      setScoreResult({
-        message: "Erreur de connexion au serveur",
-        emoji: "⚠️",
-      });
+      console.error("Prediction error:", error);
+      setPrediction("Prediction error");
       setShowResultFlag(true);
     }
   };
@@ -93,7 +76,6 @@ function PredictionForm() {
   return (
     <div className="body">
       <div
-        className="container"
         style={{
           fontFamily: "Arial, sans-serif",
           maxWidth: "400px",
@@ -109,18 +91,15 @@ function PredictionForm() {
         <h1
           style={{ fontSize: "22px", marginBottom: "20px", color: "#b3e5fc" }}
         >
-          Quiz de Productivité
+          Productivity Quiz
         </h1>
         {!showResultFlag ? (
-          <div id="quiz">
+          <div>
             {steps.map(
               (step, index) =>
                 index === currentStep && (
-                  <div key={step.id} className="question-step">
-                    <p
-                      className="question"
-                      style={{ fontSize: "18px", marginBottom: "15px" }}
-                    >
+                  <div key={step.id}>
+                    <p style={{ fontSize: "18px", marginBottom: "15px" }}>
                       {step.question}
                     </p>
                     {step.type === "select" ? (
@@ -135,7 +114,6 @@ function PredictionForm() {
                           marginBottom: "20px",
                           borderRadius: "8px",
                           border: "none",
-                          outline: "none",
                         }}
                       >
                         {step.options.map((opt) => (
@@ -148,8 +126,6 @@ function PredictionForm() {
                       <input
                         type="number"
                         name={step.id}
-                        min={0}
-                        max={24}
                         value={formData[step.id]}
                         onChange={handleChange}
                         style={{
@@ -159,7 +135,6 @@ function PredictionForm() {
                           marginBottom: "20px",
                           borderRadius: "8px",
                           border: "none",
-                          outline: "none",
                         }}
                       />
                     )}
@@ -178,7 +153,7 @@ function PredictionForm() {
                           transition: "0.3s",
                         }}
                       >
-                        Suivant
+                        Next
                       </button>
                     ) : (
                       <button
@@ -195,7 +170,7 @@ function PredictionForm() {
                           transition: "0.3s",
                         }}
                       >
-                        Voir le résultat
+                        Show Result
                       </button>
                     )}
                   </div>
@@ -203,22 +178,15 @@ function PredictionForm() {
             )}
           </div>
         ) : (
-          <div id="result">
+          <div>
             <p
-              className="result"
               style={{
                 fontSize: "20px",
                 marginTop: "20px",
                 fontWeight: "bold",
               }}
             >
-              {scoreResult.message}
-            </p>
-            <p
-              className="emoji"
-              style={{ fontSize: "40px", marginTop: "15px" }}
-            >
-              {scoreResult.emoji}
+              Prediction: {prediction}
             </p>
           </div>
         )}

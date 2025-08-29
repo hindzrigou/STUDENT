@@ -4,6 +4,7 @@ import Layout from "./pages/layout";
 import Accueil from "./pages/Acceuil";
 import PredictionForm from "./pages/PredictionForm";
 
+
 function App() {
   return (
     <Router>
