@@ -4,10 +4,13 @@ from sklearn.ensemble import RandomForestClassifier
 import joblib
 
 # Charger le dataset
-df = pd.read_csv("dataset.csv")
+df = pd.read_csv("data.csv")
+
+# Harmoniser les noms de colonnes
+df.rename(columns={"Météo": "Meteo"}, inplace=True)
 
 # Convertir colonnes catégorielles en numériques
-df = pd.get_dummies(df, columns=["Sport", "Météo"], drop_first=True)
+df = pd.get_dummies(df, columns=["Sport", "Meteo"], drop_first=True)
 
 # Séparer features et target
 X = df.drop("Productif", axis=1)
