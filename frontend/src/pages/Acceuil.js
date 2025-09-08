@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import picture from "./images/picture.jpg";
 import WhySmartDay from "./WhySmartDay.js";
@@ -13,14 +13,13 @@ function Accueil() {
   useEffect(() => {
     let i = 0;
     const interval = setInterval(() => {
-      setDisplayedText(fullText.slice(0, i + 1));
+      setDisplayedText(fullText.slice(0, i));
       i++;
-      if (i === fullText.length) {
+      if (i > fullText.length) {
         clearInterval(interval);
-        // Affiche le bouton seulement après que tout le texte soit affiché
-        setTimeout(() => setShowButton(true), 300); // petit délai pour plus de fluidité
+        setShowButton(true);
       }
-    }, 50);
+    }, 30);
     return () => clearInterval(interval);
   }, []);
 
@@ -41,12 +40,20 @@ function Accueil() {
         }}
       >
         <p className="intro-text typewriter">{displayedText}</p>
-        {showButton && <button className="learn-more-btn">Learn More</button>}
+        {showButton && (
+          <button
+            className="learn-more-btn"
+            onClick={() => window.scrollTo({ top: 1000, behavior: "smooth" })}
+          >
+            Learn More
+          </button>
+        )}
       </div>
 
       <div className="services-section" id="Services">
         <h2>Our Services</h2>
         <div className="services-list">
+          {/* Smart Prediction */}
           <div
             className="service-card"
             style={{ cursor: "pointer" }}
@@ -70,7 +77,18 @@ function Accueil() {
             <h3>Smart Prediction</h3>
             <p>Know if your day will be productive or not</p>
           </div>
-          <a className="service-card" href="/tracking-dashboard">
+
+          {/* Tracking & Dashboard */}
+          <div
+            className="service-card"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/dashboard")}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") navigate("/dashboard");
+            }}
+          >
             <svg viewBox="0 0 48 48">
               <rect x="8" y="20" width="6" height="16" rx="2" fill="#00dfd8" />
               <rect x="20" y="12" width="6" height="24" rx="2" fill="#00b8b8" />
@@ -78,8 +96,19 @@ function Accueil() {
             </svg>
             <h3>Tracking & Dashboard</h3>
             <p>History and personalized charts</p>
-          </a>
-          <a className="service-card" href="/organization-tools">
+          </div>
+
+          {/* Organization & Tools */}
+          <div
+            className="service-card"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/organization-tools")}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") navigate("/organization-tools");
+            }}
+          >
             <svg viewBox="0 0 48 48">
               <rect
                 x="10"
@@ -94,8 +123,19 @@ function Accueil() {
             </svg>
             <h3>Organization & Tools</h3>
             <p>To-Do list, planner, Pomodoro</p>
-          </a>
-          <a className="service-card" href="/student-wellbeing">
+          </div>
+
+          {/* Student Well-being */}
+          <div
+            className="service-card"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/student-wellbeing")}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") navigate("/student-wellbeing");
+            }}
+          >
             <svg viewBox="0 0 48 48">
               <circle cx="24" cy="24" r="20" fill="#00dfd8" opacity=".18" />
               <path
@@ -109,7 +149,7 @@ function Accueil() {
             </svg>
             <h3>Student Well-being</h3>
             <p>Tips and quick exercises</p>
-          </a>
+          </div>
         </div>
       </div>
 
@@ -133,4 +173,5 @@ function Accueil() {
     </>
   );
 }
+
 export default Accueil;

@@ -89,26 +89,46 @@ def predict():
 @app.route("/dashboard-stats", methods=["GET"])
 def dashboard_stats():
     try:
-        with open(HISTORY_FILE, newline="") as f:
-            reader = csv.DictReader(f)
-            rows = list(reader)
-        total = len(rows)
-        by_result = {}
-        for row in rows:
-            res = row["result"]
-            by_result[res] = by_result.get(res, 0) + 1
-        # Moyenne de sommeil (optionnel)
-        try:
-            avg_sleep = round(sum(float(r["Sommeil"]) for r in rows) / total, 2) if total > 0 else 0
-        except Exception:
-            avg_sleep = 0
+        df = pd.read_csv(HISTORY_FILE)
+        total = len(df)
+
+        # Calcul des jours Excellent, Good, Low, etc.
+        excellentDays = int((df["result"] == "Excellent").sum())
+        goodDays = int((df["result"] == "Good").sum())
+        lowDays = int((df["result"] == "Low").sum())
+        averageDays = int((df["result"] == "Average").sum())
+
+        # Moyenne de productivité (exemple : % de jours Excellent ou Good)
+        average = round(100 * (excellentDays + goodDays) / total, 1) if total > 0 else 0
+
+        # Évolution hebdomadaire (par jour de la semaine)
+        df["day"] = pd.to_datetime(df["date"]).dt.day_name()
+        weekly = (
+            df.groupby("day")["result"]
+            .apply(lambda x: (x == "Excellent").sum() * 100 / len(x) if len(x) > 0 else 0)
+            .reset_index()
+            .rename(columns={"result": "productivity"})
+            .to_dict(orient="records")
+        )
+
+        # Tendance mensuelle (par date)
+        monthly = (
+            df.groupby("date")["result"]
+            .apply(lambda x: (x == "Excellent").sum() * 100 / len(x) if len(x) > 0 else 0)
+            .reset_index()
+            .rename(columns={"result": "productivity"})
+            .to_dict(orient="records")
+        )
+
         return jsonify({
-            "total": total,
-            "by_result": by_result,
-            "avg_sleep": avg_sleep
+            "average": average,
+            "excellentDays": excellentDays,
+            "goodDays": goodDays,
+            "weekly": weekly,
+            "monthly": monthly
         })
-    except FileNotFoundError:
-        return jsonify({"total": 0, "by_result": {}, "avg_sleep": 0})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     print("🟢 Backend démarré !")
