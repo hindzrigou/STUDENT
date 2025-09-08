@@ -35,7 +35,9 @@ function Layout() {
       </header>
 
       {/* Contenu de la page */}
-      <Outlet />
+      <main className="main-content">
+        <Outlet />
+      </main>
 
       {/* Footer */}
       <footer className="footer">

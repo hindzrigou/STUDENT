@@ -1,0 +1,92 @@
+.description-page {
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-align: center;
+}
+
+/* Section titre avec image */
+.header-section {
+  height: 350px; /* agrandi l’image */
+  
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.5), 
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("./images/image2.jpg"); /* 👈 ajoute gradient + image */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+
+  padding: 15px 25px;
+  border-radius: 10px;
+}
+
+/* Section description */
+.content-section {
+  padding: 40px 60px;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  width: 100%; /* occupe toute la largeur */
+  text-align: justify; /* meilleur rendu du texte */
+
+  font-family: NunitoSans-Regular;
+    font-size: 1.6rem;
+    color: rgba(0, 0, 0, .84);
+}
+
+/* Section Why it matters */
+.why-section {
+  padding: 50px 20px;
+}
+
+.why-section h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  text-align: left;
+}
+
+/* Call to Action */
+.cta-section {
+  padding: 60px 20px;
+}
+
+.cta-section h2 {
+  margin-bottom: 20px;
+}
+
+.cta-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.cta-btn:hover {
+  background: #0056b3;
+}

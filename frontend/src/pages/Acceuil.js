@@ -70,7 +70,7 @@ function Accueil() {
             <h3>Smart Prediction</h3>
             <p>Know if your day will be productive or not</p>
           </div>
-          <a className="service-card" href="/tracking-dashboard">
+          <a className="service-card" href="/description">
             <svg viewBox="0 0 48 48">
               <rect x="8" y="20" width="6" height="16" rx="2" fill="#00dfd8" />
               <rect x="20" y="12" width="6" height="24" rx="2" fill="#00b8b8" />
@@ -79,7 +79,7 @@ function Accueil() {
             <h3>Tracking & Dashboard</h3>
             <p>History and personalized charts</p>
           </a>
-          <a className="service-card" href="/organization-tools">
+          <a className="service-card" href="/todolist">
             <svg viewBox="0 0 48 48">
               <rect
                 x="10"
