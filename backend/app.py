@@ -129,6 +129,26 @@ def dashboard_stats():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+        with open(HISTORY_FILE, newline="") as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
+        total = len(rows)
+        by_result = {}
+        for row in rows:
+            res = row["result"]
+            by_result[res] = by_result.get(res, 0) + 1
+        # Moyenne de sommeil (optionnel)
+        try:
+            avg_sleep = round(sum(float(r["Sommeil"]) for r in rows) / total, 2) if total > 0 else 0
+        except Exception:
+            avg_sleep = 0
+        return jsonify({
+            "total": total,
+            "by_result": by_result,
+            "avg_sleep": avg_sleep
+        })
+    except FileNotFoundError:
+        return jsonify({"total": 0, "by_result": {}, "avg_sleep": 0})
 
 if __name__ == "__main__":
     print("🟢 Backend démarré !")

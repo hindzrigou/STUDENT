@@ -4,6 +4,9 @@ import Acceuil from "./pages/Acceuil";
 import PredictionForm from "./pages/PredictionForm";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./pages/layout"; // ✅ importe ton Layout
+import HistoryTable from "./pages/history";
+import DescriptionPage from "./pages/DescriptionPage"; 
+import TodoList from "./pages/TodoList";
 
 function App() {
   return (
@@ -14,6 +17,9 @@ function App() {
           <Route index element={<Acceuil />} /> {/* page d'accueil */}
           <Route path="prediction" element={<PredictionForm />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="history" element={<HistoryTable />} />
+          <Route path="description" element={<DescriptionPage />} /> 
+          <Route path="todolist" element={<TodoList />} />
         </Route>
       </Routes>
     </Router>

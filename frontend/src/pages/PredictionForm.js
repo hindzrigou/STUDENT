@@ -10,6 +10,8 @@ function PredictionForm() {
     Humeur: "",
     Sport: "Non",
     Meteo: "Soleil",
+    Sport: "Non", // Keep value as "Oui"/"Non" for backend compatibility
+    Meteo: "Soleil", // Keep value as "Soleil"/"Nuageux"/"Pluie" for backend compatibility
   });
   const [showResultFlag, setShowResultFlag] = useState(false);
   const [prediction, setPrediction] = useState("");
@@ -18,6 +20,22 @@ function PredictionForm() {
     { id: "Sommeil", question: "How many hours did you sleep?", type: "number" },
     { id: "Cours", question: "How many classes do you have today?", type: "number" },
     { id: "Humeur", question: "How do you rate your mood? (1-5)", type: "number" },
+    {
+    {
+      id: "Sommeil",
+      question: "How many hours did you sleep?",
+      type: "number",
+    },
+    {
+      id: "Cours",
+      question: "How many classes do you have today?",
+      type: "number",
+    },
+    {
+      id: "Humeur",
+      question: "How do you rate your mood? (1-5)",
+      type: "number",
+    },
     {
       id: "Sport",
       question: "Did you do any sport?",
@@ -55,6 +73,10 @@ function PredictionForm() {
       });
       const data = await response.json();
       setPrediction(data.prediction[0]);
+        body: JSON.stringify(formData), // envoie les champs corrects
+      });
+      const data = await response.json();
+      setPrediction(data.prediction[0]); // get prediction
       setShowResultFlag(true);
     } catch (error) {
       console.error("Prediction error:", error);
@@ -225,6 +247,8 @@ function PredictionForm() {
       }}
     >
       <button
+    <div className="body">
+      <div
         style={{
           backgroundColor: "#0a357d",
           color: "#ffffff",
@@ -263,6 +287,109 @@ function PredictionForm() {
       >
         📜 History
       </button>
+        <h1
+          style={{ fontSize: "22px", marginBottom: "20px", color: "#b3e5fc" }}
+        >
+          Productivity Quiz
+        </h1>
+        {!showResultFlag ? (
+          <div>
+            {steps.map(
+              (step, index) =>
+                index === currentStep && (
+                  <div key={step.id}>
+                    <p style={{ fontSize: "18px", marginBottom: "15px" }}>
+                      {step.question}
+                    </p>
+                    {step.type === "select" ? (
+                      <select
+                        name={step.id}
+                        value={formData[step.id]}
+                        onChange={handleChange}
+                        style={{
+                          padding: "10px",
+                          fontSize: "16px",
+                          width: "90%",
+                          marginBottom: "20px",
+                          borderRadius: "8px",
+                          border: "none",
+                        }}
+                      >
+                        {step.options.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="number"
+                        name={step.id}
+                        value={formData[step.id]}
+                        onChange={handleChange}
+                        style={{
+                          padding: "10px",
+                          fontSize: "16px",
+                          width: "90%",
+                          marginBottom: "20px",
+                          borderRadius: "8px",
+                          border: "none",
+                        }}
+                      />
+                    )}
+                    {currentStep < steps.length - 1 ? (
+                      <button
+                        onClick={nextQuestion}
+                        style={{
+                          backgroundColor: "#b3e5fc",
+                          color: "#0d47a1",
+                          padding: "12px 20px",
+                          border: "none",
+                          borderRadius: "10px",
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                          transition: "0.3s",
+                        }}
+                      >
+                        Next
+                      </button>
+                    ) : (
+                      <button
+                        onClick={showResult}
+                        style={{
+                          backgroundColor: "#b3e5fc",
+                          color: "#0d47a1",
+                          padding: "12px 20px",
+                          border: "none",
+                          borderRadius: "10px",
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                          transition: "0.3s",
+                        }}
+                      >
+                        Show Result
+                      </button>
+                    )}
+                  </div>
+                )
+            )}
+          </div>
+        ) : (
+          <div>
+            <p
+              style={{
+                fontSize: "20px",
+                marginTop: "20px",
+                fontWeight: "bold",
+              }}
+            >
+              Prediction: {prediction}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   </div>
 </div>
