@@ -32,7 +32,7 @@ function Accueil() {
           backgroundImage: `url(${picture})`,
           backgroundSize: "cover",
           backgroundAttachment: "fixed",
-          minHeight: "1000px",
+          minHeight: "600px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -41,7 +41,10 @@ function Accueil() {
         }}
       >
         <p className="intro-text typewriter">{displayedText}</p>
-        {showButton && <button className="learn-more-btn">Learn More</button>}
+        {showButton && <button className="learn-more-btn"
+        onClick={() => navigate("/prediction")}
+        >Start
+        </button>}
       </div>
 
       <div className="services-section" id="Services">

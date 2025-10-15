@@ -16,13 +16,13 @@ function Layout() {
         <nav className="nav">
           <ul>
             <li>
-              <a href="#acceuil">Accueil</a>
+              <a href="/">Accueil</a>
             </li>
             <li>
-              <a href="#Services">Services</a>
+              <a href="/#Services">Services</a>
             </li>
             <li>
-              <a href="#Communauté">Communauté</a>
+              <a href="/#Communauté">Communauté</a>
             </li>
             <li>
               <a href="#Profil">Profil</a>

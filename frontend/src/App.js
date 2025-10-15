@@ -4,8 +4,9 @@ import Layout from "./pages/layout";
 import Accueil from "./pages/Acceuil";
 import PredictionForm from "./pages/PredictionForm";
 import HistoryTable from "./pages/history";
-import DescriptionPage from "./pages/DescriptionPage"; 
+import DescriptionPage from "./pages/DescriptionPage";
 import TodoList from "./pages/TodoList";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -15,8 +16,9 @@ function App() {
           <Route index element={<Accueil />} />
           <Route path="prediction" element={<PredictionForm />} />
           <Route path="history" element={<HistoryTable />} />
-          <Route path="description" element={<DescriptionPage />} /> 
+          <Route path="description" element={<DescriptionPage />} />
           <Route path="todolist" element={<TodoList />} />
+          <Route path="dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
     </Router>
