@@ -13,6 +13,8 @@ function PredictionForm() {
   });
   const [showResultFlag, setShowResultFlag] = useState(false);
   const [prediction, setPrediction] = useState("");
+  const [wellbeingAdvice, setWellbeingAdvice] = useState("");
+
   const navigate = useNavigate();
 
   const steps = [
@@ -116,6 +118,21 @@ function PredictionForm() {
       const data = await response.json();
       if (data.prediction) {
         setPrediction(data.prediction);
+          // 🔹 Appel du chatbot de bien-être IA après la prédiction
+  try {
+    const wellbeingResponse = await fetch("http://127.0.0.1:5000/wellbeing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prediction: data.prediction }),
+    });
+    const wellbeingData = await wellbeingResponse.json();
+    if (wellbeingData.message) {
+      setWellbeingAdvice(wellbeingData.message);
+    }
+  } catch (err) {
+    console.error("Erreur lors de la récupération du conseil bien-être :", err);
+  }
+
       } else if (data.error) {
         setPrediction("Erreur: " + data.error);
       } else {
@@ -254,6 +271,21 @@ function PredictionForm() {
                     ? prediction.join(" ")
                     : prediction}
                 </p>
+
+                {wellbeingAdvice && (
+  <div
+    style={{
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      padding: "15px",
+      borderRadius: "10px",
+      marginTop: "15px",
+      fontStyle: "italic",
+    }}
+  >
+    💬 <strong>Well-being Assistant:</strong> {wellbeingAdvice}
+  </div>
+)}
+
                 {typeof prediction === "string" &&
                   prediction.startsWith("Erreur") && (
                     <button

@@ -113,3 +113,45 @@ def dashboard_stats():
 if __name__ == "__main__":
     print("🟢 Backend démarré !")
     app.run(debug=True)
+
+@app.route("/wellbeing", methods=["POST"])
+def wellbeing():
+    """
+    Analyse les réponses du formulaire et renvoie un message bien-être.
+    """
+    data = request.get_json()
+
+    # On récupère les données du formulaire
+    sommeil = float(data.get("Sommeil", 0))
+    humeur = int(data.get("Humeur", 3))
+    sport = data.get("Sport", "Non")
+    meteo = data.get("Meteo", "Soleil")
+    prediction = data.get("prediction", "Unknown")
+
+    # Analyse simple sans IA (tu pourras plus tard connecter ChatGPT ici)
+    message = "Here’s your personalized well-being advice 💬:\n\n"
+
+    if sommeil < 5:
+        message += "😴 You seem tired. Try to get more rest tonight.\n"
+    elif sommeil >= 8:
+        message += "🌟 Great! You had enough sleep — that’s perfect for focus.\n"
+
+    if humeur <= 2:
+        message += "💙 Seems like you’re a bit down. Take a short break, breathe, or listen to your favorite song.\n"
+    elif humeur >= 4:
+        message += "😊 You’re in a good mood! Keep that positive energy going.\n"
+
+    if sport == "Non":
+        message += "🏃‍♀️ Maybe a short walk could boost your mood and focus.\n"
+    else:
+        message += "💪 Exercise done! That’s great for mental health.\n"
+
+    if meteo == "Pluie":
+        message += "🌧️ Rainy days can make you feel sleepy. Try to work near good lighting.\n"
+
+    if prediction.lower() in ["low", "average"]:
+        message += "✨ Don’t worry — not every day is perfect. Small steps count!"
+    else:
+        message += "🚀 Looks like today will be productive! Keep it up!"
+
+    return jsonify({"message": message})

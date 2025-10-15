@@ -98,7 +98,7 @@ function Accueil() {
             <h3>Organization & Tools</h3>
             <p>To-Do list, planner, Pomodoro</p>
           </a>
-          <a className="service-card" href="/student-wellbeing">
+          <a className="service-card" href="/wellbeing">
             <svg viewBox="0 0 48 48">
               <circle cx="24" cy="24" r="20" fill="#00dfd8" opacity=".18" />
               <path
